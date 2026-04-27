@@ -1,0 +1,18 @@
+using sysbus
+mach create "stm32f4"
+machine LoadPlatformDescription @platforms/boards/stm32f4_discovery.repl
+
+sysbus LoadELF $ORIGIN/blink.elf
+
+# Log Port D peripheral accesses at debug level
+sysbus LogPeripheralAccess sysbus.gpioPortD
+
+# Set debug log level ONLY for gpioPortD, keep others quiet
+logLevel 3          # global: errors only
+logLevel 0 sysbus.gpioPortD   # Port D: all messages
+
+# Dump to a file so --hide-monitor doesn't swallow it
+logFile $ORIGIN/gpio_access.log true
+
+start
+emulation RunFor "00:00:05"
