@@ -1,0 +1,25 @@
+# --- IDE / Editor Files ---
+.vscode/
+*.code-workspace
+.history/
+
+# --- Build Artifacts ---
+Debug/
+Release/
+bin/
+obj/
+*.elf
+*.bin
+*.map
+*.hex
+*.o
+*.d
+*.su
+
+# --- Simulation & Logs ---
+# Keep your scripts, but ignore local logs if they get too large
+# verification.log 
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
