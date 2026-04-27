@@ -1,0 +1,68 @@
+ZX-8080 FIRMWARE ENGINEERING: CUMULATIVE PROJECT QUESTIONS & CHALLENGES
+
+This file contains the sequence of technical questions and challenges posed during the 
+ZX-8080 Microcontroller development modules.
+
+================================================================================
+MODULE 1: THE SMART FAN (GPIO & ADC)
+================================================================================
+
+1. THE REGISTER MAP CHALLENGE
+   In the ZX-8080 Register Map, ADC_CFG is at offset 0x10 and ADC_VAL is at 0x14. 
+   If you were to create a struct for these, why can they not be in the same 
+   bit-field struct without a 'reserved' gap or separate pointers?
+
+2. SYNTAX vs LOGIC
+   Why will the following code result in an infinite loop?
+   while(adc_config->START_CONV = 1) { ... }
+
+3. THE RACE CONDITION
+   If you enable START_CONV and immediately read the ADC_VAL on the next line 
+   of code without a while() loop or interrupt, why will the reading be 
+   inaccurate/zero?
+
+4. GPIO DIRECTION LOGIC
+   To turn a fan OFF connected to Port A Pin 0, should you change the 
+   GPIO_DIR register or the GPIO_DATA register? Explain the difference.
+
+================================================================================
+MODULE 2: THE HEARTBEAT LED (TIMERS & CLOCKS)
+================================================================================
+
+5. THE PRESCALER (PSC) PURPOSE
+   The ZX-8080 runs at 80 MHz. Why is it impossible to time a 1-second delay 
+   using a 16-bit timer if the Prescaler is set to 0?
+
+6. CLOCK MATH
+   If f_sys = 80 MHz and PSC = 7999, what is the frequency of the timer ticks?
+   If your target is a 0.5s toggle, what must the Auto-Reload (ARR) value be?
+
+7. THE "+1" RULE
+   Why do the formulas for PSC and ARR always require an (N + 1) in the calculation?
+   (e.g., f_clk = f_sys / (PSC + 1))
+
+8. THE STICKY STATUS FLAG
+   Hardware sets the UIF (Update Interrupt Flag) to 1 when the timer reaches ARR. 
+   What happens if the software reads the flag but never clears it?
+
+9. BITWISE TOGGLING
+   Write the bitwise operation required to toggle Pin 5 (flip it from 1 to 0 
+   or 0 to 1) without knowing its current state.
+
+================================================================================
+MODULE 3: SYSTEM ARCHITECTURE & INTEGRATION
+================================================================================
+
+10. HYSTERESIS DESIGN
+    Your code turns the fan ON > 3000 and OFF < 1500. 
+    If the sensor fluctuates between 2999 and 3001 rapidly, how does your current 
+    code prevent the fan motor from burning out due to rapid switching?
+
+11. VOLATILE MEMORY
+    Why must peripheral pointers be declared as 'volatile'? What would a 
+    compiler do to your 'while(adc_config->START_CONV == 1)' loop if 
+    the keyword was missing?
+
+12. THE INFINITE LOOP
+    Why do embedded main() functions conclude with a while(1) loop instead 
+    of a return 0;?
