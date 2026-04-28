@@ -1,0 +1,16 @@
+using sysbus
+mach create "ZX-8080"
+machine LoadPlatformDescription @zx8080.repl
+
+# Load the ELF
+sysbus LoadELF @zx8080_project.elf
+
+# Setup CPU Registers
+sysbus.cpu PC 0x0
+sysbus.cpu SP 0x20010000
+
+# GPIO Logger
+sysbus AddWatchpointHook 0x40001008 DoubleWord Write "print('Hardware: GPIO Write -> ' + hex(value))"
+
+logLevel 0
+start
